@@ -1,9 +1,60 @@
-import React from 'react';
-import {StyleSheet, Text} from 'react-native';
+import React, {useEffect, useState} from 'react';
+import {Image, Linking, StyleSheet, Text, View} from 'react-native';
+import {Camera} from 'react-native-vision-camera';
 import {CONTENT_SPACING, SAFE_AREA_PADDING} from '../components/Constants';
 
-const PermissionsPage = () => {
-  return <Text>123</Text>;
+const PermissionsPage = ({navigation}) => {
+  const [cameraPermissionStatus, setCameraPermissionStatus] =
+    useState('not-determined');
+  const [microphonePermissionStatus, setMicrophonePermissionStatus] =
+    useState('not-determined');
+  const requestMicrophonePermission = async () => {
+    const permission = await Camera.requestMicrophonePermission();
+    if (permission === 'denied') await Linking.openSettings();
+    setMicrophonePermissionStatus(permission);
+  };
+  const requestCameraPermission = async () => {
+    const permission = await Camera.requestCameraPermission();
+    if (permission === 'denied') await Linking.openSettings();
+    setCameraPermissionStatus(permission);
+  };
+  useEffect(() => {
+    if (
+      cameraPermissionStatus === 'authorized' &&
+      microphonePermissionStatus === 'authorized'
+    )
+      navigation.replace('CameraPage');
+  }, [cameraPermissionStatus, microphonePermissionStatus, navigation]);
+
+  return (
+    <View style={styles.container}>
+      <Image
+        source={require('../utils/images/waterai2.png')}
+        style={styles.banner}
+      />
+      <Text style={styles.welcome}>Welcome to CameraApp</Text>
+      <View style={styles.permissionsContainer}>
+        {cameraPermissionStatus !== 'authorized' && (
+          <Text style={styles.permissionText}>
+            Camera needs <Text style={styles.bold}>Camera permission</Text>.{' '}
+            <Text style={styles.hyperlink} onPress={requestCameraPermission}>
+              Grant
+            </Text>
+          </Text>
+        )}
+        {microphonePermissionStatus !== 'authorized' && (
+          <Text style={styles.permissionText}>
+            Camera needs <Text style={styles.bold}>Microphone permission</Text>.{' '}
+            <Text
+              style={styles.hyperlink}
+              onPress={requestMicrophonePermission}>
+              Grant
+            </Text>
+          </Text>
+        )}
+      </View>
+    </View>
+  );
 };
 
 export default PermissionsPage;
