@@ -9,3 +9,6 @@ export const SAFE_AREA_PADDING = {
   paddingRight: StaticSafeAreaInsets.safeAreaInsetsRight + CONTENT_SPACING,
   paddingBottom: CONTENT_SPACING,
 };
+
+export const SCALE_FULL_ZOOM = 3;
+export const BUTTON_SIZE = 40;

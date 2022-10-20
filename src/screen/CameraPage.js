@@ -1,25 +1,20 @@
-//import liraries
-import React, {Component} from 'react';
-import {View, Text, StyleSheet} from 'react-native';
+import React from 'react';
+import {Text, View} from 'react-native';
+import {Camera, useCameraDevices} from 'react-native-vision-camera';
 
-// create a component
 const CameraPage = () => {
+  const devices = useCameraDevices();
+  const device = devices.back;
   return (
-    <View style={styles.container}>
-      <Text>CameraPage</Text>
+    <View style={{flex: 1}}>
+      <Camera
+        style={{flex: 1}}
+        device={device}
+        isActive={true}
+        enableZoomGesture
+      />
     </View>
   );
 };
 
-// define your styles
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#2c3e50',
-  },
-});
-
-//make this component available to the app
 export default CameraPage;
